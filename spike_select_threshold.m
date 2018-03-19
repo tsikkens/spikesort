@@ -1,8 +1,16 @@
-function spike_select_threshold(sessions,varargin)
+function spike_select_threshold(sessions,ThSecs,varargin)
+
+ThSecs = 10; %number of seconds to do threshold selection on
+
+nump=64; %Number of samples per waveform
+prePoints = 22; %number of samples before spike peak
+
+FS = 32000;
+
 
 for iSess = 1:length(sessions)
     
-    if nargin > 1
+    if nargin > 2
         channels = varargin(1);
     else
         channels = lfp_findmda(sessions{iSess});

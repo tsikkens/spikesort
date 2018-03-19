@@ -1,6 +1,6 @@
 %TS Last edit 23-01-2018
 
-foldername = 'F:\test\PVCre116\Sort';
+foldername = 'E:\Canon_MMN_passiveAwake\1.52 Rec 1\Sort\2018-02-20_11-04-13';
 filename = fullfile(foldername,'matlabData.mat');
 matObj=matfile(filename,'Writable',true);
 
@@ -36,22 +36,18 @@ opt_smem.fail_exit = 2;
 for iChan = channelsToAnalyze
     
     spikes=cell2mat(matObj.spikes_waveforms(1,iChan));
-    spikes= squeeze(spikes(iChan,:,:));
-    
-    ts=cell2mat(matObj.spikes_ts(1,iChan));
-%     redo_clus = 1;
+%     spikes= squeeze(spikes(iChan,:,:));
 %     
+    ts=cell2mat(matObj.spikes_ts(1,iChan));
+%     redo_clus = 1;%     
 %     while redo_clus
         L=-Inf;
         
-        %Prepare test set, to be kept unchanged across multiple runs of the smem algorithm
-        
-        
-        
-        testSet=randperm(size(spikes,1));
-        testSet=testSet(1:round(size(spikes,1)*testSetSize));
+        %Prepare test set, to be kept unchanged across multiple runs of the smem algorith         
+       
         while L<=0
-                    
+        testSet=randperm(size(spikes,1));
+        testSet=testSet(1:round(size(spikes,1)*testSetSize));             
             
             [clusters,k,pc,L,D,BIC,cont] = SortSpikes_fsmem(spikes,trainingSetSize,pcc,cth,th,ltol,calc_index,0,testSet,opt_smem);
             
@@ -67,11 +63,12 @@ for iChan = channelsToAnalyze
         end
 %     end
 
-    sp.clusters{iChan} = clusters;
-    sp.nClus{iChan} = k;
-    sp.pc{iChan} = pc;
-    sp.L{iChan} = L;
-    sp.BIC{iChan} = BIC;
-    sp.cont{iChan} = cont;
+    sp.clusters = clusters;
+    sp.nClus = k;
+    sp.pc = pc;
+    sp.L = L;
+    sp.BIC = BIC;
+    sp.cont = cont;
 
+    matObj.sp(1,iChan) = {sp};
 end

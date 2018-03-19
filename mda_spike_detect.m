@@ -2,7 +2,7 @@
 
 %TS Last edit 23-01-2018
 
-datafolder = 'F:\test\PVCre116\Sort'; %data source
+datafolder = 'E:\Canon_MMN_passiveAwake\1.52 Rec 1\Sort\2018-02-20_11-04-13'; %data source
 % outputfolder = 'E:\Passive_MMN\';%folder to save matlabData.mat file to (creates new subfolder per session)
 %
 sessions = {datafolder};
@@ -22,7 +22,7 @@ runtime = zeros(1,length(sessions));
 
 %Select all thresholds
 if chooseThresholds
-    spike_select_threshold(sessions)
+    spike_select_threshold(sessions,ThSecs)
 end
 
 %% Main
