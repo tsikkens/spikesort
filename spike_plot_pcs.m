@@ -1,5 +1,6 @@
 function spike_plot_pcs(axhandle,pc,clusters,clus2plot)
 
+axes(axhandle)
 cla(axhandle)
 hold(axhandle,'on')
 grid(axhandle,'on')

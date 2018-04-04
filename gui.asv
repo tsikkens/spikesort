@@ -22,7 +22,7 @@ function varargout = gui(varargin)
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 04-Apr-2018 16:54:00
+% Last Modified by GUIDE v2.5 04-Apr-2018 16:03:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -108,9 +108,6 @@ spike_plot_isi(handles.IsiAxes,spikes_ts,sp.clusters,clus2plot)
 nspikes = sum(ismember(sp.clusters,clus2plot));
 stringm='False negative/positive indexes:';
 for j=clus2plot
-    if j == 0
-        continue
-    end
     stringm=sprintf('%s\n Cluster %d: %d',stringm,j,sp.cont(j));
 end
 text = {['Channel: ' num2str(iChan)];['nSpikes: ' num2str(nspikes)];stringm};
@@ -149,7 +146,6 @@ end
 
 sp_new = cluster_split_function(MAT,iChan,indx);
 sp.clusters(indx) = sp_new.clusters + max(sp.clusters);
-sp.cont = [sp.cont sp_new.cont];
 
 spikes =  cell2mat(MAT.spikes_waveforms(1,iChan));
 spikes_ts = cell2mat(MAT.spikes_ts(1,iChan));
@@ -348,40 +344,5 @@ set(handles.clusterData,'String',text)
 % --- Executes on button press in undoButton.
 function undoButton_Callback(hObject, eventdata, handles)
 % hObject    handle to undoButton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-global MAT iChan sp
-sp = cell2mat(MAT.sp(1,iChan));
-spikes =  cell2mat(MAT.spikes_waveforms(1,iChan));
-spikes_ts = cell2mat(MAT.spikes_ts(1,iChan));
-clus2plot = unique(sp.clusters);
-liststr = {'all'};
-for iClus = clus2plot
-    liststr = cat(1,liststr,num2str(iClus));
-end
-
-
-set(handles.listbox1,'Value',1)
-set(handles.listbox1,'String',liststr)
-
-clus2plot(clus2plot == 0) = [];
-spike_plot_waveforms(handles.WaveformAxes,spikes,sp.clusters,clus2plot)
-spike_plot_pcs(handles.PcAxes,sp.pc,sp.clusters,clus2plot)
-spike_plot_isi(handles.IsiAxes,spikes_ts,sp.clusters,clus2plot)
-
-nspikes = length(sp.clusters);
-stringm='False negative/positive indexes:';
-for j=1:length(sp.cont)
-    stringm=sprintf('%s\n Cluster %d: %d',stringm,j,sp.cont(j));
-end
-text = {['Channel: ' num2str(iChan)];['nSpikes: ' num2str(nspikes)];stringm};
-set(handles.clusterData,'String',text)
-
-
-% --- Executes during object deletion, before destroying properties.
-guide
-
-% hObject    handle to listbox1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)

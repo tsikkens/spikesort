@@ -1,4 +1,4 @@
-%TS Last edit 23-01-2018
+%TS Last edit 28-03-2018
 
 foldername = 'E:\Canon_MMN_passiveAwake\1.52 Rec 1\Sort\2018-02-20_11-04-13';
 filename = fullfile(foldername,'matlabData.mat');
@@ -9,7 +9,7 @@ matObj=matfile(filename,'Writable',true);
 channelsToAnalyze = 1:size(matObj.spikes_ts,2);
 nump=size(cell2mat(matObj.spikes_waveforms(1,1)),3); %Number of samples per waveform
 
-trainingSetSize=Inf;
+trainingSetSize= 10000;%Inf;
 testSetSize = 0.1;
 calc_index=1; %Calculate cluster quality indexes? (1=yes, 0=no)
 
