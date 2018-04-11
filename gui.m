@@ -1,26 +1,7 @@
 function varargout = gui(varargin)
 % GUI MATLAB code for gui.fig
-%      GUI, by itself, creates a new GUI or raises the existing
-%      singleton*.
-%
-%      H = GUI returns the handle to a new GUI or the handle to
-%      the existing singleton*.
-%
-%      GUI('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in GUI.M with the given input arguments.
-%
-%      GUI('Property','Value',...) creates a new GUI or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before gui_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to gui_OpeningFcn via varargin.
-%
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
+%      
 % See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Edit the above text to modify the response to help gui
 
 % Last Modified by GUIDE v2.5 04-Apr-2018 16:54:00
 
@@ -281,6 +262,23 @@ function ConfirmClustersButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global MAT iChan sp
+
+spikes_clusters = sp.clusters;
+clustersToKeep = unique(spikes_clusters);
+count = 0;
+for iClus = clustersToKeep
+    if iClus ==0
+        continue
+    end
+    count = count +1;
+    spikes_clusters(spikes_clusters == iClus) = count;
+end
+
+clustersToKeep = unique(spikes_clusters);
+clustersToKeep(clustersToKeep == 0) = [];
+MAT.spikes_clusters(1,iChan) = {spikes_clusters};
+MAT.clustersToKeep(1,iChan) = {clustersToKeep};
+
 iChan = iChan +1;
 sp = cell2mat(MAT.sp(1,iChan));
 spikes =  cell2mat(MAT.spikes_waveforms(1,iChan));
@@ -316,7 +314,7 @@ function loaddatabutton_Callback(hObject, eventdata, handles)
 global MAT iChan sp
 [filename, pathname] = uigetfile('*matlabData.mat','Select matlabData file');
 ffile = fullfile(pathname,filename);
-MAT = matfile(ffile);
+MAT = matfile(ffile,'Writable',true);
 iChan = 1;
 sp = cell2mat(MAT.sp(1,iChan));
 spikes =  cell2mat(MAT.spikes_waveforms(1,iChan));
