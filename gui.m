@@ -1,6 +1,6 @@
 function varargout = gui(varargin)
 % GUI MATLAB code for gui.fig
-%      
+%
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
 % Last Modified by GUIDE v2.5 04-Apr-2018 16:54:00
@@ -176,7 +176,9 @@ global sp iChan MAT
 R = inputdlg('Which clusters do you want to merge?','Merge',1,{'[]'});
 R = eval(cell2mat(R));
 
-sp.clusters(sp.clusters == R(2)) = R(1);
+for iR = 2:length(R)
+    sp.clusters(sp.clusters == R(iR)) = R(1);
+end
 
 spikes =  cell2mat(MAT.spikes_waveforms(1,iChan));
 spikes_ts = cell2mat(MAT.spikes_ts(1,iChan));
@@ -281,6 +283,14 @@ MAT.clustersToKeep(1,iChan) = {clustersToKeep};
 
 iChan = iChan +1;
 sp = cell2mat(MAT.sp(1,iChan));
+
+previous = who(MAT);
+if any(ismember(previous,'clustersToKeep'))
+    if length(MAT.clustersToKeep) >= iChan
+        sp.clusters = cell2mat(MAT.spikes_clusters(1,iChan));
+    end
+end
+
 spikes =  cell2mat(MAT.spikes_waveforms(1,iChan));
 spikes_ts = cell2mat(MAT.spikes_ts(1,iChan));
 clus2plot = unique(sp.clusters);
@@ -317,6 +327,14 @@ ffile = fullfile(pathname,filename);
 MAT = matfile(ffile,'Writable',true);
 iChan = 1;
 sp = cell2mat(MAT.sp(1,iChan));
+
+previous = who(MAT);
+if any(ismember(previous,'clustersToKeep'))
+    if length(MAT.clustersToKeep) >= iChan
+        sp.clusters = cell2mat(MAT.spikes_clusters(1,iChan));
+    end
+end
+
 spikes =  cell2mat(MAT.spikes_waveforms(1,iChan));
 spikes_ts = cell2mat(MAT.spikes_ts(1,iChan));
 clus2plot = unique(sp.clusters);
